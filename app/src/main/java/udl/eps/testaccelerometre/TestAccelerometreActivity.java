@@ -13,9 +13,13 @@ import android.widget.Toast;
 
 public class TestAccelerometreActivity extends Activity implements SensorEventListener {
     private SensorManager sensorManager;
+    private SensorManager sensorManagerLlum;
     private boolean color = false;
     private TextView view;
+    private TextView viewText;
+    private TextView viewLlum;
     private long lastUpdate;
+    private long lastUpdateLlum;
 
 
     @Override
@@ -26,17 +30,24 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         setContentView(R.layout.main);
         view = findViewById(R.id.textView);
         view.setBackgroundColor(Color.GREEN);
+        viewText = findViewById(R.id.textView2);
+        viewLlum = findViewById(R.id.textView3);
+        viewLlum.setBackgroundColor(Color.YELLOW);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        if (sensorManager != null)
+        if (sensorManager != null) {
             sensorManager.registerListener(this,
                     sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                     SensorManager.SENSOR_DELAY_NORMAL);
-        // register this class as a listener for the accelerometer sensor
+            // register this class as a listener for the accelerometer sensor
 
-        lastUpdate = System.currentTimeMillis();
-
+            lastUpdate = System.currentTimeMillis();
+        }
+        else
+        {
+            view.setText(R.string.no_acce);
+        }
     }
 
     @Override
