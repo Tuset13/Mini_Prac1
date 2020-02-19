@@ -8,20 +8,22 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import android.text.method.ScrollingMovementMethod;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TestAccelerometreActivity extends Activity implements SensorEventListener {
     private SensorManager sensorManager;
-    private SensorManager sensorManagerLlum;
     private boolean color = false;
     private TextView viewAcc;
     private TextView viewText;
-    private ListView viewLlum;
+    private TextView viewLlum;
     private long lastUpdate;
     private long lastUpdateLlum;
 
+    private float maxLumRange;
+    private float lastLightValue = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,8 +34,9 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         viewAcc = findViewById(R.id.textView);
         viewAcc.setBackgroundColor(Color.GREEN);
         viewText = findViewById(R.id.textView2);
-        viewLlum = findViewById(R.id.listView3);
+        viewLlum = findViewById(R.id.textView3);
         viewLlum.setBackgroundColor(Color.YELLOW);
+        viewLlum.setMovementMethod(new ScrollingMovementMethod());
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -48,16 +51,18 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             }
             else
             {
-                viewAcc.setText(R.string.no_acce);
+                viewText.setText(R.string.no_acce);
             }
 
             if(sensorLight != null)
             {
                 sensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
+                maxLumRange = sensorLight.getMaximumRange();
+                viewLlum.setText(getText(R.string.yes_light) + "\n" + getText(R.string.max_light) + maxLumRange + "\n \n");
             }
             else
             {
-                viewLlum.setTextAlignment(R.string.no_light);
+                viewLlum.setText(R.string.no_light);
             }
 
             lastUpdate = System.currentTimeMillis();
@@ -108,7 +113,30 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
     }
 
     private void getLight(SensorEvent event) {
+        float lightValue = event.values[0];
+        long actualTime = System.currentTimeMillis();
 
+        if(lastLightValue == lightValue)
+        {
+            return;
+        }
+        else
+        {
+            if((actualTime - lastUpdateLlum) < 1000)
+            {
+                return;
+            }
+            else
+            {
+                //Cos codi sensor de llum
+                lastUpdateLlum = actualTime;
+                lastLightValue = lightValue;
+
+                viewLlum.append(getText(R.string.new_light_value));
+                //Introduir el nou valor
+                viewLlum.append();
+            }
+        }
     }
 
     @Override
