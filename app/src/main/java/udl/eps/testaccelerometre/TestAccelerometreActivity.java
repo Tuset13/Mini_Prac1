@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TestAccelerometreActivity extends Activity implements SensorEventListener {
+
     private SensorManager sensorManager;
     private boolean color = false;
     private TextView viewAcc;
@@ -22,7 +23,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
     private long lastUpdate;
     private long lastUpdateLlum;
 
-    private float maxLumRange;
+    private float maxLumRange, lowLumRange, mediumLumRang;
     private float lastLightValue = 0;
 
     @Override
@@ -40,6 +41,10 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        createListeners();
+    }
+
+    private void createListeners() {
         if (sensorManager != null) {
 
             Sensor sensorAcc = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -58,6 +63,8 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             {
                 sensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
                 maxLumRange = sensorLight.getMaximumRange();
+                lowLumRange = maxLumRange / 3;
+                mediumLumRang = lowLumRange * 2;
                 viewLlum.setText(getText(R.string.yes_light) + "\n" + getText(R.string.max_light) + maxLumRange + "\n \n");
             }
             else
@@ -122,7 +129,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         }
         else
         {
-            if((actualTime - lastUpdateLlum) < 1000)
+            if((actualTime - lastUpdateLlum) < 3000)
             {
                 return;
             }
@@ -134,7 +141,15 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
 
                 viewLlum.append(getText(R.string.new_light_value));
                 //Introduir el nou valor
-                viewLlum.append();
+                viewLlum.append(" " + lastLightValue);
+
+                if (lastLightValue < lowLumRange){
+                    viewLlum.append("\n LOW INTENSITY \n");
+                }else if(lastLightValue < mediumLumRang){
+                    viewLlum.append("\n MEDIUM INTENSITY \n");
+                }else {
+                    viewLlum.append("\n HIGH INTENSITY \n");
+                }
             }
         }
     }
@@ -149,5 +164,12 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         // unregister listener
         super.onPause();
         sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        //Register the listener again
+        super.onResume();
+        createListeners();
     }
 }
