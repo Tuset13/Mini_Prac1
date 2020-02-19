@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="shake">Shake to get a toast and to switch color</string>
     <string name="no_acce">Sorry, there is no accelerometer</string>
+    <string name="no_light">Sorry, there is no light sensor</string>
     <string name="shuffed">Device was shuffed</string>
 
 </resources>
