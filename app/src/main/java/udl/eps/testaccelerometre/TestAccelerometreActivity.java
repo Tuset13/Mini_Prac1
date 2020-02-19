@@ -37,7 +37,6 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         viewText = findViewById(R.id.textView2);
         viewLlum = findViewById(R.id.textView3);
         viewLlum.setBackgroundColor(Color.YELLOW);
-        viewLlum.setMovementMethod(new ScrollingMovementMethod());
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -53,6 +52,10 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             if(sensorAcc != null)
             {
                 sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL);
+
+                viewText.setText("\n\n Resolucio: "+ sensorAcc.getResolution());
+                viewText.append("\n Rang mesura: " + sensorAcc.getMaximumRange());
+                viewText.append("\n Consum: " + sensorAcc.getPower());
             }
             else
             {
@@ -129,7 +132,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         }
         else
         {
-            if((actualTime - lastUpdateLlum) < 3000)
+            if((actualTime - lastUpdateLlum) < 1500)
             {
                 return;
             }
