@@ -8,8 +8,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import android.text.method.ScrollingMovementMethod;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
