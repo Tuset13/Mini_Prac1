@@ -52,8 +52,8 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
             if(sensorAcc != null)
             {
                 sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL);
-
-                viewText.setText("\n\n Resolucio: "+ sensorAcc.getResolution());
+                viewText.setText(getText(R.string.shake));
+                viewText.append("\n\n Resolucio: "+ sensorAcc.getResolution());
                 viewText.append("\n Rang mesura: " + sensorAcc.getMaximumRange());
                 viewText.append("\n Consum: " + sensorAcc.getPower());
             }
@@ -126,17 +126,9 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         float lightValue = event.values[0];
         long actualTime = System.currentTimeMillis();
 
-        if(lastLightValue == lightValue)
+        if(lastLightValue != lightValue)
         {
-            return;
-        }
-        else
-        {
-            if((actualTime - lastUpdateLlum) < 1500)
-            {
-                return;
-            }
-            else
+            if((actualTime - lastUpdateLlum) > 1500)
             {
                 //Cos codi sensor de llum
                 lastUpdateLlum = actualTime;
@@ -164,7 +156,7 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
 
     @Override
     protected void onPause() {
-        // unregister listener
+        //Unregister listener
         super.onPause();
         sensorManager.unregisterListener(this);
     }
@@ -174,5 +166,12 @@ public class TestAccelerometreActivity extends Activity implements SensorEventLi
         //Register the listener again
         super.onResume();
         createListeners();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //Unregister listener
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
     }
 }

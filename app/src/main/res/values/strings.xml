@@ -10,7 +10,6 @@
     <string name="yes_light">Light sensor available</string>
     <string name="max_light">Max. Range = </string>
     <string name="new_light_value">New value light sensor = </string>
-    <string name="light_intensity"> Intesity</string>
     <string name="shuffed">Device was shuffed</string>
 
 </resources>
